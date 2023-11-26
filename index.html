@@ -1,208 +1,159 @@
-
-<link rel="stylesheet" href="FILE.css">
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>语音切分与特征提取系统</title>
-    
-    <!-- 导入外部CSS文件（Bootstrap）-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
-    <!-- 导入normalize.css -->
+    <!-- 添加 Font Awesome 图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <style>
-        @import url("FILE.css");
-        
-        /* 添加自定义样式规则 */
-        #app {
-            height: 100%;
-        }
-
-        .ant-space {
-            width: 100%;
-        }
-
-        .ant-layout-sider-zero-width-trigger {
-            display: none;
-        }
-
-        .ant-card {
-            border-radius: 30px;
-        }
-
-        .ant-card-hoverable {
-            cursor: auto;
-        }
-
-        .ant-card+.ant-card {
-            margin-top: 20px;
-        }
-
-        .drawer-handle {
-            position: absolute;
-            top: 72px;
-            width: 41px;
-            height: 40px;
-            cursor: pointer;
-            z-index: 0;
-            text-align: center;
-            line-height: 40px;
-            font-size: 16px;
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #fff;
-            right: -40px;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
-            border-radius: 0 4px 4px 0;
+            height: 100vh;
         }
 
-        @media (min-width: 769px) {
-            .drawer-handle {
-                display: none;
-            }
+        #main-container {
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            padding: 20px;
+            border-radius: 10px;
         }
 
-        .fade-in-enter, .fade-in-leave-active, .fade-in-linear-enter, .fade-in-linear-leave, .fade-in-linear-leave-active, .fade-in-linear-enter, .fade-in-linear-leave, .fade-in-linear-leave-active {
-            opacity: 0;
+        .section-container {
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
         }
 
-        .fade-in-linear-enter-active, .fade-in-linear-leave-active {
-            -webkit-transition: opacity .2s linear;
-            transition: opacity .2s linear;
+        h1,
+        h2 {
+            color: #1877f2;
         }
 
-        .fade-in-linear-enter-active, .fade-in-linear-leave-active {
-            -webkit-transition: opacity .2s linear;
-            transition: opacity .2s linear;
+        input,
+        label,
+        button,
+        select {
+            margin-bottom: 10px;
         }
 
-        .fade-in-enter-active, .fade-in-leave-active {
-            -webkit-transition: all .3s cubic-bezier(.55, 0, .1, 1);
-            transition: all .3s cubic-bezier(.55, 0, .1, 1);
+        label {
+            display: block;
         }
 
-        .zoom-in-center-enter-active, .zoom-in-center-leave-active {
-            -webkit-transition: all .3s cubic-bezier(.55, 0, .1, 1);
-            transition: all .3s cubic-bezier(.55, 0, .1, 1);
+        #customParams {
+            margin-top: 10px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
         }
 
-        .zoom-in-center-enter, .zoom-in-center-leave-active {
-            opacity: 0;
-            -webkit-transform: scaleX(0);
-            transform: scaleX(0);
+        #advancedParams {
+            margin-left: 20px;
         }
 
-        .zoom-in-top-enter-active, .zoom-in-top-leave-active {
-            opacity: 1;
-            -webkit-transform: scaleY(1);
-            transform: scaleY(1);
-            -webkit-transition: opacity .3s cubic-bezier(.23, 1, .32, 1), -webkit-transform .3s cubic-bezier(.23, 1, .32, 1);
-            transition: opacity .3s cubic-bezier(.23, 1, .32, 1), -webkit-transform .3s cubic-bezier(.23, 1, .32, 1);
-            transition: transform .3s cubic-bezier(.23, 1, .32, 1), opacity .3s cubic-bezier(.23, 1, .32, 1);
-            transition: transform .3s cubic-bezier(.23, 1, .32, 1), opacity .3s cubic-bezier(.23, 1, .32, 1), -webkit-transform .3s cubic-bezier(.23, 1, .32, 1);
-            -webkit-transform-origin: center top;
-            transform-origin: center top;
+        #logOutput {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 100px;
+            overflow: auto;
+            margin-top: 20px;
         }
 
-        .zoom-in-top-enter, .zoom-in-top-leave-active {
-            opacity: 0;
-            -webkit-transform: scaleY(0);
-            transform: scaleY(0);
+        #startButton {
+            background-color: #1877f2;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        .zoom-in-bottom-enter-active, .zoom-in-bottom-leave-active {
-            opacity: 1;
-            -webkit-transform: scaleY(1);
-            transform: scaleY(1);
-            -webkit-transition: opacity .3s cubic-bezier(.23, 1, .32, 1), -webkit-transform .3s cubic-bezier(.23, 1, .32, 1);
-            transition: opacity .3s cubic-bezier(.23, 1, .32, 1), -webkit-transform .3s cubic-bezier(.23, 1, .32, 1);
-            transition: transform .3s cubic-bezier(.23, 1, .32, 1), opacity .3s cubic-bezier(.23, 1, .32, 1);
-            transition: transform .3s cubic-bezier(.23, 1, .32, 1), opacity .3s cubic-bezier(.23, 1, .32, 1), -webkit-transform .3s cubic-bezier(.23, 1, .32, 1);
-            -webkit-transform-origin: center bottom;
-            transform-origin: center bottom;
+        #startButton:hover {
+            background-color: #145492;
         }
 
-        .zoom-in-bottom-enter, .zoom-in-bottom-leave-active {
-            opacity: 0;
-            -webkit-transform: scaleY(0);
-            transform: scaleY(0);
-        }
-
-        .zoom-in-left-enter-active, .zoom-in-left-leave-active {
-            opacity: 1;
-            -webkit-transform: scale(1, 1);
-            transform: scale(1, 1);
-            -webkit-transition: opacity .3s cubic-bezier(.23, 1, .32, 1), -webkit-transform .3s cubic-bezier(.23, 1, .32, 1);
-            transition: opacity .3s cubic-bezier(.23, 1, .32, 1), -webkit-transform .3s cubic-bezier(.23, 1, .32, 1);
-            transition: transform .3s cubic-bezier(.23, 1, .32, 1), opacity .3s cubic-bezier(.23, 1, .32, 1);
-            transition: transform .3s cubic-bezier(.23, 1, .32, 1), opacity .3s cubic-bezier(.23, 1, .32, 1), -webkit-transform .3s cubic-bezier(.23, 1, .32, 1);
-            -webkit-transform-origin: top left;
-            transform-origin: top left;
-        }
-
-        .zoom-in-left-enter, .zoom-in-left-leave-active {
-            opacity: 0;
-            -webkit-transform: scale(.45, .45);
-            transform: scale(.45, .45);
-        }
-
-        .list-enter-active, .list-leave-active {
-            -webkit-transition: all .3s;
-            transition: all .3s;
-        }
-
-        .list-enter, .list-leave-active {
-            opacity: 0;
-            -webkit-transform: translateY(-30px);
-            transform: translateY(-30px);
-        }
-
-        .ant-progress-inner {
-            background-color: #EBEEF5;
+        .icon {
+            margin-right: 5px;
         }
     </style>
 </head>
+
 <body>
-    
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-6 offset-md-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="text-center">语音切分与特征提取系统</h3>
-                        </div>
-                        <div class="card-body">
-                            <!-- 文件上传区域 -->
-                            <div class="custom-file mb-3">
-                                <input type="file" class="custom-file-input" id="fileInput">
-                                <label class="custom-file-label" for="fileInput" id="fileLabel">选择语音文件/文件夹</label>
-                            </div>
-    
-                            <!-- 开始处理按钮 -->
-                            <button class="btn btn-primary btn-block" id="startButton">开始处理</button>
-    
-                            <!-- 显示处理结果的区域 -->
-                            <div class="mt-3" id="resultArea"></div>
-                        </div>
+
+    <div id="main-container">
+        <div class="section-container">
+            <h1><i class="fas fa-microphone-alt icon"></i>语音切分与特征提取系统</h1>
+        </div>
+
+        <div class="section-container">
+            <h2><i class="fas fa-file-audio icon"></i>选择语音文件/文件夹</h2>
+            <input type="file" id="fileInput" accept=".wav, .mp3">
+            <div id="fileInfo"></div>
+        </div>
+
+        <div class="section-container" id="customParams">
+            <h2><i class="fas fa-cogs icon"></i>切分参数设置</h2>
+            <label><input type="checkbox" id="useDefault"> 使用默认参数</label>
+
+            <div id="splitParams">
+                <label><i class="fas fa-clock icon"></i>切分时长：<input type="text" id="splitDuration" placeholder="10">秒</label> <br>
+                <label><i class="fas fa-percent icon"></i>重叠率：<input type="text" id="overlapRate" placeholder="50">%</label><br>
+
+                <div>
+                    <label><input type="checkbox" id="advancedSettings"> <i class="fas fa-cogs icon"></i>高级设置</label>
+                    <div id="advancedParams">
+                        <label><input type="checkbox" id="autoDetectEndpoint"> <i class="fas fa-microphone-alt icon"></i>自动检测语音端点</label><br>
+                        <label><i class="fas fa-signal icon"></i>能量门限：<input type="text" id="energyThreshold" placeholder="-30">dB</label>
                     </div>
                 </div>
             </div>
         </div>
-    
-        <script>
-            // 添加JavaScript代码来处理文件上传和开始处理按钮的点击事件
-            document.getElementById("fileInput").addEventListener("change", function(event) {
-                const selectedFile = event.target.files[0];
-                // 在这里处理选定的文件，可以将文件上传到后端进行处理
-            });
-    
-            document.getElementById("startButton").addEventListener("click", function() {
-                // 在这里触发语音切分与特征提取的操作，将结果显示在resultArea中
-                const resultArea = document.getElementById("resultArea");
-                resultArea.innerHTML = "处理中，请稍候...";
-            });
-        </script>
-   <!-- 页面内容 -->
+
+        <div class="section-container">
+            <h2><i class="fas fa-cogs icon"></i>特征提取参数设置</h2>
+            <!-- 添加特征类型和其他参数的输入框 -->
+            <label><i class="fas fa-wrench icon"></i>特征类型：
+                <select id="featureType">
+                    <option value="mfcc">MFCC</option>
+                    <option value="spectrogram">Spectrogram</option>
+                    <!-- 添加其他特征类型选项 -->
+                </select>
+            </label>
+            <br>
+            <label><i class="fas fa-sliders-h icon"></i>其他参数：<input type="text" id="otherParams" placeholder="Enter parameters"></label>
+        </div>
+
+        <div class="section-container">
+            <h2><i class="fas fa-file-export icon"></i>输出设置</h2>
+            <!-- 添加输出格式的选择框 -->
+            <label><i class="fas fa-file-export icon"></i>输出格式：
+                <select id="outputFormat">
+                    <option value="csv">CSV</option>
+                    <option value="json">JSON</option>
+                    <!-- 添加其他输出格式选项 -->
+                </select>
+            </label>
+        </div>
+
+        <div class="section-container">
+            <button id="startButton"><i class="fas fa-play icon"></i>开始任务</button>
+        </div>
+
+        <div class="section-container">
+            <h2><i class="fas fa-file-alt icon"></i>运行日志</h2>
+            <div id="logOutput"></div>
+        </div>
+    </div>
+
 </body>
+
 </html>
