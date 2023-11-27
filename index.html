@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>语音切分与特征提取系统</title>
-    <!-- 添加 Font Awesome 图标 -->
+    <!-- Adding Font Awesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <style>
         body {
@@ -25,24 +25,22 @@
             width: 80%;
             padding: 20px;
             border-radius: 10px;
+            text-align: center;
         }
 
         .section-container {
             border: 1px solid #ccc;
-            margin-bottom: 20px;
+            margin: 20px 0;
             padding: 15px;
             border-radius: 8px;
+            text-align: left;
         }
 
-        h1,
-        h2 {
+        h1, h2 {
             color: #1877f2;
         }
 
-        input,
-        label,
-        button,
-        select {
+        input, label, button, select {
             margin-bottom: 10px;
         }
 
@@ -50,7 +48,7 @@
             display: block;
         }
 
-        #customParams {
+        #customParams, #advancedParams {
             margin-top: 10px;
             border-top: 1px solid #ccc;
             padding-top: 10px;
@@ -120,12 +118,12 @@
 
         <div class="section-container">
             <h2><i class="fas fa-cogs icon"></i>特征提取参数设置</h2>
-            <!-- 添加特征类型和其他参数的输入框 -->
+            <!-- Add feature type and other parameter input fields -->
             <label><i class="fas fa-wrench icon"></i>特征类型：
                 <select id="featureType">
                     <option value="mfcc">MFCC</option>
                     <option value="spectrogram">Spectrogram</option>
-                    <!-- 添加其他特征类型选项 -->
+                    <!-- Add other feature type options -->
                 </select>
             </label>
             <br>
@@ -134,12 +132,12 @@
 
         <div class="section-container">
             <h2><i class="fas fa-file-export icon"></i>输出设置</h2>
-            <!-- 添加输出格式的选择框 -->
+            <!-- Add output format selection box -->
             <label><i class="fas fa-file-export icon"></i>输出格式：
                 <select id="outputFormat">
                     <option value="csv">CSV</option>
                     <option value="json">JSON</option>
-                    <!-- 添加其他输出格式选项 -->
+                    <!-- Add other output format options -->
                 </select>
             </label>
         </div>
